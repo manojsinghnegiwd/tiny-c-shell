@@ -1,3 +1,4 @@
+#include <sys/syslimits.h>
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +44,25 @@ void shell_loop () {
             token = strtok(NULL, " ");
         }
         args[i] = NULL;
+
+        if (strcmp(args[0], "cd") == 0) {
+            if (args[1] == NULL) {
+                perror("cd failed");
+            } else if (chdir(args[1]) != 0) {
+                perror("cd failed");
+            }
+            continue;
+        }
+
+        if (strcmp(args[0], "pwd") == 0) {
+            char cwd[PATH_MAX];
+            if (getcwd(cwd, sizeof(cwd)) != NULL) {
+                printf("%s\n", cwd);
+            } else {
+                perror("pwd failed");
+            }
+            continue;
+        }
 
         struct timeval start, end;
         gettimeofday(&start, NULL);

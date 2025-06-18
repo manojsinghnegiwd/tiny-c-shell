@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build tinyshell",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "tinyshell.c",
+                "-o",
+                "tinyshell"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

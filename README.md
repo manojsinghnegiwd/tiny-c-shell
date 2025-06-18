@@ -16,7 +16,7 @@ TinyShell is a minimalistic shell implementation that demonstrates core shell fu
 ## Features (Planned)
 
 - [x] Basic command execution
-- [ ] Built-in commands (cd, pwd, exit)
+- [x] Built-in commands (cd, pwd, exit)
 - [ ] Environment variable support
 - [ ] Input/output redirection (>, <, >>)
 - [ ] Pipeline support (|)
