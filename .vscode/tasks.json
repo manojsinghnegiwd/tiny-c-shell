@@ -2,14 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build tinyshell",
+            "label": "CMake Build",
             "type": "shell",
-            "command": "gcc",
-            "args": [
-                "tinyshell.c",
-                "-o",
-                "tinyshell"
-            ],
+            "command": "cmake -S . -B build && cmake --build build",
             "group": "build",
             "problemMatcher": []
         }

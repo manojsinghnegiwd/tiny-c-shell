@@ -1,3 +1,4 @@
+#include "history.h"
 #include <sys/syslimits.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -33,6 +34,8 @@ void shell_loop () {
 
         input[strcspn(input, "\n")] = '\0';
 
+        add_to_history(input);
+
         if (strcmp(input, "exit") == 0) {
             break;
         }
@@ -61,6 +64,31 @@ void shell_loop () {
             } else {
                 perror("pwd failed");
             }
+            continue;
+        }
+
+        if (strcmp(args[0], "up") == 0) {
+            const char* upCmd = get_history_up();
+            if (upCmd != NULL) {
+                printf("%s\n", upCmd);
+            } else {
+                perror("get_history_up failed");
+            }
+            continue;
+        }
+
+        if (strcmp(args[0], "down") == 0) {
+            const char* downCmd = get_history_down();
+            if (downCmd != NULL) {
+                printf("%s\n", downCmd);
+            } else {
+                perror("get_history_down failed");
+            }
+            continue;
+        }
+
+        if (strcmp(args[0], "print_history") == 0) {
+            print_history();
             continue;
         }
 

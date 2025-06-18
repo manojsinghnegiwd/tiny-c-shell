@@ -1,0 +1,3 @@
+/Users/manoj/Projects/low-level/TinyShell/build/CMakeFiles/tinyshell.dir
+/Users/manoj/Projects/low-level/TinyShell/build/CMakeFiles/edit_cache.dir
+/Users/manoj/Projects/low-level/TinyShell/build/CMakeFiles/rebuild_cache.dir
