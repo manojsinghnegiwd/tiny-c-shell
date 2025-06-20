@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 99)
 set(SOURCES
     tinyshell.c
     history.c
+    rawmode.c
     # Add more .c files as you create them
 )
 

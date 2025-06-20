@@ -1,4 +1,5 @@
 #include "history.h"
+#include "rawmode.h"
 #include <sys/syslimits.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -14,6 +15,62 @@
 
 void shell_loop();
 
+void read_input(char* buffer) {
+    int len = 0;
+    buffer[0] = '\0';
+
+    reset_history_index();
+    enable_raw_mode();
+
+    char c;
+    while(read(STDIN_FILENO, &c, 1) == 1) {
+        if (c == '\n') {
+            buffer[len] = '\0';
+            printf("\n");
+            break;
+        } else if (c == 127 || c == '\b') {
+            if (len > 0) {
+                len--;
+                buffer[len] = '\0';
+                printf("\b \b");
+                fflush(stdout);
+            }
+        } else if (c == 27) {
+            char seq[2];
+            if (read(STDIN_FILENO, &seq[0], 1) == 1 &&
+                read(STDIN_FILENO, &seq[1], 1) == 1) {
+                    if (seq[0] == '[') {
+                        if (seq[1] == 'A') {
+                            const char* prevCmd = get_history_up();
+                            if (prevCmd) {
+                                for (int i = 0; i < len; i++) printf("\b \b");
+                                len = snprintf(buffer, MAX_INPUT, "%s", prevCmd);
+                                printf("%s", buffer);
+                            }
+                        } else if (seq[1] == 'B') {
+                            const char* nextCmd = get_history_down();
+                            for (int i = 0; i < len; i++) printf("\b \b");
+                            if (nextCmd) {
+                                len = snprintf(buffer, MAX_INPUT, "%s", nextCmd);
+                                printf("%s", buffer);
+                            } else {
+                                len = 0;
+                                buffer[0] = '\0';
+                            }
+                        }
+                    }
+            }
+        } else {
+            if (len < MAX_INPUT - 1) {
+                buffer[len++] = c;
+                write(STDOUT_FILENO, &c, 1);
+            }
+        }
+    }
+
+    disable_raw_mode();
+}
+
 int main() {
     shell_loop();
     return 0;
@@ -23,16 +80,15 @@ void shell_loop () {
     char input[MAX_INPUT];
     char *args[MAX_ARGS];
 
+    init_history();
+
     while (1) {
         printf("tinyshell> ");
         fflush(stdout);
 
-        if(fgets(input, MAX_INPUT, stdin) == NULL) {
-            perror("fgets");
-            continue;
-        }
+        read_input(input);
 
-        input[strcspn(input, "\n")] = '\0';
+        if (strlen(input) == 0) continue;
 
         add_to_history(input);
 
@@ -63,26 +119,6 @@ void shell_loop () {
                 printf("%s\n", cwd);
             } else {
                 perror("pwd failed");
-            }
-            continue;
-        }
-
-        if (strcmp(args[0], "up") == 0) {
-            const char* upCmd = get_history_up();
-            if (upCmd != NULL) {
-                printf("%s\n", upCmd);
-            } else {
-                perror("get_history_up failed");
-            }
-            continue;
-        }
-
-        if (strcmp(args[0], "down") == 0) {
-            const char* downCmd = get_history_down();
-            if (downCmd != NULL) {
-                printf("%s\n", downCmd);
-            } else {
-                perror("get_history_down failed");
             }
             continue;
         }
