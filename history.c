@@ -34,9 +34,9 @@ const char* get_history_down() {
     if (current_index < history_count - 1) {
         current_index++;
         return history[current_index];
-    } else if (current_index == history_count) {
-        current_index++;
-        return " ";
+    } else {
+        current_index = history_count;
+        return "";
     }
 
     return NULL;

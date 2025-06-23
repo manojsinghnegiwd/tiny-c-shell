@@ -46,6 +46,7 @@ void read_input(char* buffer) {
                                 for (int i = 0; i < len; i++) printf("\b \b");
                                 len = snprintf(buffer, MAX_INPUT, "%s", prevCmd);
                                 printf("%s", buffer);
+                                fflush(stdout);
                             }
                         } else if (seq[1] == 'B') {
                             const char* nextCmd = get_history_down();
@@ -53,9 +54,11 @@ void read_input(char* buffer) {
                             if (nextCmd) {
                                 len = snprintf(buffer, MAX_INPUT, "%s", nextCmd);
                                 printf("%s", buffer);
+                                fflush(stdout);
                             } else {
                                 len = 0;
                                 buffer[0] = '\0';
+                                fflush(stdout);
                             }
                         }
                     }

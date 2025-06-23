@@ -22,7 +22,7 @@ TinyShell is a minimalistic shell implementation that demonstrates core shell fu
 - [ ] Pipeline support (|)
 - [ ] Background process execution (&)
 - [ ] Signal handling (Ctrl+C, Ctrl+Z)
-- [ ] Command history
+- [x] Command history
 - [ ] Tab completion
 
 ## Building
