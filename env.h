@@ -16,9 +16,11 @@ static int shell_var_count = 0;
 
 char* expand_variables(const char *input);
 int is_valid_assignment(const char *input);
+void handle_valid_assignment(const char *input);
 void init_shell_vars();
-int set_shell_var(const char *name, const char *value);
+void set_shell_var(const char *name, const char *value);
 const char* get_shell_var(const char *name);
+void print_shell_var();
 
 
 #endif

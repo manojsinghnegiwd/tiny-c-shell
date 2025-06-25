@@ -1,3 +1,4 @@
+#include "env.h"
 #include "history.h"
 #include "rawmode.h"
 #include <sys/syslimits.h>
@@ -99,6 +100,16 @@ void shell_loop () {
             break;
         }
 
+        if (strcmp(input, "printenv") == 0) {
+            print_shell_var();
+            continue;
+        }
+        
+        if (is_valid_assignment(input)) {
+            handle_valid_assignment(input);
+            continue;
+        }
+
         char *token = strtok(input, " ");
         int i = 0;
         while (token != NULL && i < MAX_ARGS - 1) {
@@ -130,6 +141,7 @@ void shell_loop () {
             print_history();
             continue;
         }
+        
 
         struct timeval start, end;
         gettimeofday(&start, NULL);
