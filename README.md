@@ -16,26 +16,41 @@ TinyShell is a minimalistic shell implementation that demonstrates core shell fu
 ## Features (Planned)
 
 - [x] Basic command execution
-- [x] Built-in commands (cd, pwd, exit)
-- [ ] Environment variable support
+- [x] Built-in commands (cd, pwd, exit, printenv, print_history)
+- [x] Environment variable support (shell variable assignment and retrieval)
+- [x] Command history with up/down arrow keys
 - [ ] Input/output redirection (>, <, >>)
 - [ ] Pipeline support (|)
 - [ ] Background process execution (&)
 - [ ] Signal handling (Ctrl+C, Ctrl+Z)
-- [x] Command history
 - [ ] Tab completion
 
 ## Building
 
 ```bash
-# Build instructions will be added soon
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 ## Usage
 
 ```bash
-# Usage instructions will be added soon
+./tinyshell
 ```
+
+### Available Commands
+
+- Standard UNIX commands (ls, cat, echo, etc.)
+- `cd <directory>` - Change directory
+- `pwd` - Print working directory
+- `exit` - Exit the shell
+- `printenv` - Print all shell variables
+- `print_history` - Display command history
+- `VARIABLE=value` - Set shell variable
+- Use ↑/↓ arrow keys to navigate command history
+- Backspace to delete characters
 
 ## Contributing
 
