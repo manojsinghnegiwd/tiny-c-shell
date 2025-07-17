@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 
 void init_shell_vars() {
@@ -62,7 +63,7 @@ void set_shell_var(const char *name, const char *value) {
 const char* get_shell_var(const char* name) {
     for (int i = 0; i < shell_var_count; i++) {
         if (strcmp(name, shell_vars[i].name) == 0) {
-            return shell_vars[i].name;
+            return shell_vars[i].value;
         }
     }
 
@@ -107,4 +108,54 @@ void handle_valid_assignment(const char *input) {
 
     free(name);
     free(value);
+}
+
+char* expand_variables(const char* input) {
+    size_t input_len = strlen(input);
+    size_t result_cap = input_len + 1;
+    size_t result_len = 0;
+    char *result = malloc(result_cap);
+
+    if (!result) return NULL;
+
+    for (size_t i = 0; i < input_len; i++) {
+        if (input[i] == '$' && (isalpha(input[i + 1]) || input[i + 1] == '_')) {
+            i++;
+
+            char varname[256];
+            size_t vi = 0;
+
+            while(isalnum(input[i]) || input[i] == '_') {
+                varname[vi++] = input[i++];
+            }
+
+            varname[vi] = '\0';
+            i--;
+
+            const char *val = get_shell_var(varname);
+            if (val) {
+                size_t val_len = strlen(val);
+
+                if (result_len + val_len + 1 > result_cap) {
+                    result_cap = result_len + val_len + 16;
+                    result = realloc(result, result_cap);
+                    if (!result) return NULL;
+                }
+
+                strcpy(&result[result_len], val);
+                result_len += val_len;
+            }
+        } else {
+            if (result_len + 2 > result_cap) {
+                result_cap = result_len + 16;
+                result = realloc(result, result_cap);
+                if (!result) return NULL;
+            }
+
+            result[result_len++] = input[i];
+        }
+    }
+
+    result[result_len] = '\0';
+    return result;
 }

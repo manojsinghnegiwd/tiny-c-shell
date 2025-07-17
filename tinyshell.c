@@ -110,7 +110,14 @@ void shell_loop () {
             continue;
         }
 
-        char *token = strtok(input, " ");
+        char *expanded_input = expand_variables(input);
+
+        if (!expanded_input) {
+            perror("Memory error during expansion\n");
+            continue;
+        }
+
+        char *token = strtok(expanded_input, " ");
         int i = 0;
         while (token != NULL && i < MAX_ARGS - 1) {
             args[i++] = token;
