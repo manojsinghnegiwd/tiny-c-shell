@@ -1,13 +1,13 @@
 #include "env.h"
 #include "history.h"
 #include "rawmode.h"
-#include <sys/syslimits.h>
+#include "pipe.h"
+#include <limits.h>
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/_types/_pid_t.h>
-#include <sys/_types/_timeval.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -149,6 +149,10 @@ void shell_loop () {
             continue;
         }
         
+        if (has_pipe(args)) {
+            int status = execute_pipeline(args);
+            continue;
+        }
 
         struct timeval start, end;
         gettimeofday(&start, NULL);

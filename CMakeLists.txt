@@ -8,6 +8,7 @@ set(SOURCES
     history.c
     rawmode.c
     env.c
+    pipe.c
     # Add more .c files as you create them
 )
 
