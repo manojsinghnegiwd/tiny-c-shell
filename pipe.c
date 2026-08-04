@@ -21,6 +21,10 @@ int execute_pipeline(char **args) {
     for (int k = 0; args[k] != NULL; k++) {
         if (strcmp(args[k], "|") == 0) {
             cmds[i][j] = NULL;
+            if (i == MAX_PIPES - 1) {
+                fprintf(stderr, "too much pipes\n");
+                return -1;
+            }
             i++;
             j = 0;
         }
