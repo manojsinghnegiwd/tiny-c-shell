@@ -15,37 +15,21 @@ int has_pipe(char **args) {
 }
 
 int execute_pipeline(char **args) {
-    int index = 0;
-    while (args[index] != NULL) {
-        index++;
-    }
-    /* detect pipe in the input and save index of pipes */
-    int pipe_flag[MAX_PIPES];
-    int count_index = 0, n_pipes = 0;
-
-    pipe_flag[count_index++] = -1;
-    for (int i = 0; i < index; i++) {
-        if (strcmp(args[i], "|") == 0) {
-            if (count_index == MAX_PIPES - 1) {
-                fprintf(stderr, "too much pipes");
-                return -1;
-            }
-            pipe_flag[count_index++] = i;
-            n_pipes++;
-        }
-    }
-    pipe_flag[count_index++] = index;
-
     /* devide pipe into commands */
     char *cmds[MAX_CMDS][MAX_ARGS];
-    int n_cmds = n_pipes + 1;
-    for (int i = 0; i < count_index - 1; i++) {
-        for (int j = pipe_flag[i] + 1; j < pipe_flag[i + 1]; j++) {
-            cmds[i][j - pipe_flag[i] - 1] = args[j];
+    int i = 0, j = 0;
+    for (int k = 0; args[k] != NULL; k++) {
+        if (strcmp(args[k], "|") == 0) {
+            cmds[i][j] = NULL;
+            i++;
+            j = 0;
         }
-        int len = pipe_flag[i + 1] - pipe_flag[i] - 1;
-        cmds[i][len] = NULL;
+        else {
+            cmds[i][j++] = args[k];
+        }
     }
+    cmds[i][j] = NULL;
+    int n_cmds = i + 1;
 
     /* run whole pipeline */
     /* create n-1 pipes */
